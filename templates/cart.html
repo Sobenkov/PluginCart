@@ -1,0 +1,386 @@
+<link href="{$wa_app_static_url}plugins/postponedbasket/css/main.css" rel="stylesheet" type="text/css">
+<script src="{$wa_app_static_url}plugins/postponedbasket/js/cart.js"></script>
+<h1><span>[`Shopping cart`]</span><button class="btn btn-default btn-sm btn_clear_cart" type="button">[`Clear cart`]</button></h1>
+<form method="post" class="w-cart">
+    <div class="w-line-01">
+
+        <div class="w-select-panel">
+            <label class="select-panel-input-check">
+                <input type="checkbox" onclick="checkAll(this)" name="select-all" value="selected-all" class="input">
+                <span class="label-text" >Выбрать все</span>
+            </label>
+
+            <button  type="button" class="select-panel__btn-del">Удалить выбранное</button>
+        </div>
+
+    </div>
+
+    <div class="w-line-02 cart">
+        <div class="w-column-01" id="items">
+            {foreach $cart.items as $item}
+            <div class="item" data-id="{$item.id}">
+
+                <div class="item-select">
+                    <input class="item-select__input" type="checkbox">
+                </div>
+
+                <div class="item-image">
+<!--                    <img src="{$wa->shop->productUrl($item.product)}" title="{$item.product.name|escape}" alt="test-alt" class="item-image__img">-->
+                    {$wa->shop->productImgHtml($item.product, '96x96', ['default' => "`$wa_theme_url`img/dummy96.png"])}
+                </div>
+
+                <div class="w-item-content">
+                    <div class="item-description">
+                        <a href="{$wa->shop->productUrl($item.product)}" class="item-description__name">{$item.product.name|escape}</a>
+                        {if $item.sku_name && $item.sku_name != $item.product.name}
+                        <span class="vendor-code">
+                            <span class="vendor-code__title">Код товара:</span>
+                            <span class="vendor-code__value">{$item.sku_name|escape}</span>
+                          </span>
+                        {/if}
+                    </div>
+
+                    <div class="item-qty">
+                        <div class="qty_wrap">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button class="minus btn btn-default" type="button">-</button>
+                                </div>
+                                <input data-step="{$contain}" type="text" name="quantity[{$item.id}]" value='{$item.quantity|string_format:"%d"}' class="qty form-control{if !empty($item.error)} error{/if}">
+                                <div class="input-group-btn">
+                                    <button class="plus btn btn-default" type="button">+</button>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                        <!--            <div class="input-group">-->
+                        <!--                <div class="input-group-btn">-->
+                        <!--                    <button class="minus btn btn-default" type="button">-</button>-->
+                        <!--                </div>-->
+                        <!--                <input {if $contain != 1}readonly{/if} data-step="{$contain}" type="text" name="quantity[{$item.id}]" value="{$item.quantity}" class="qty form-control{if !empty($item.error)} error{/if}">-->
+                        <!--                <div class="input-group-btn">-->
+                        <!--                    <button class="plus btn btn-default" type="button">+</button>-->
+                        <!--                </div>-->
+                        <!--            </div>-->
+                        <!--        </div>-->
+
+
+
+                    <div class="item-price">
+
+                          <span class="item-price__total">
+                            <span class="value">{shop_currency_html($item.full_price, true)}</span>
+<!--                            <span class="ruble">Р</span>-->
+                          </span>
+
+                        <a class="delete" title="Удалить из корзины"><i class="fa fa-times-circle"></i>Удалить</a>
+
+                    </div>
+                </div>
+
+            </div>
+            {/foreach}
+
+        </div>
+
+
+        <div class="w-column-02">
+
+            <!-- расчет корзины -->
+            <div class="cart-sum-panel">
+                <div class="cart-sum-panel-total">
+
+                        <span class="w-line">
+                          <span class="title">Общая сумма:</span>
+                          <span class="numbers">
+                            <span class="value general-total">{$wa->shop->cart->total()}</span>
+<!--                            <span class="ruble">Р</span>-->
+                          </span>
+                        </span>
+
+                    <span class="w-line">
+                          <span class="title">Скидка:</span>
+                          <span class="numbers">
+                            <span class="symbol">−</span>
+                            <span class="value discount-total">{shop_currency_html($discount, true)}</span>
+<!--                            <span class="ruble">Р</span>-->
+                          </span>
+                        </span>
+
+                    <span class="w-line w-line__total">
+                          <span class="title">Всего:</span>
+                          <span class="numbers">
+                            <span class="value cart-total total nowrap">{shop_currency_html($cart.total, true)}</span>
+<!--                            <span class="ruble">Р</span>-->
+                          </span>
+                        </span>
+
+
+                    <input onclick="yaCounter41730784.reachGoal('checkout'); return true;" name="checkout" class="btn btn-primary btn-xmd cart-sum-panel-total__btn" type="submit" value="Оформить заказ">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+<!--    <div class="cart cart-summary-page">-->
+<!--        <table class="cart-table">-->
+<!--            <thead class="hidden-xs">-->
+<!--            <tr>-->
+<!--                <td>[`Cart items`]</td>-->
+<!--                <td></td>-->
+<!--                <td>[`Price`]</td>-->
+<!--                <td>[`Quantity`]</td>-->
+<!--                <td></td>-->
+<!--                <td class="hidden-xs hidden-sm">[`Sum`]</td>-->
+<!--                <td></td>-->
+<!--            </tr>-->
+<!--            </thead>-->
+
+<!--            <tbody>-->
+<!--&lt;!&ndash;            {$cart|print_r}&ndash;&gt;-->
+<!--            {foreach $cart.items as $item}-->
+<!--            &lt;!&ndash; cart item &ndash;&gt;-->
+<!--            <tr class="item" data-id="{$item.id}">-->
+<!--                <td class="item-thumb">-->
+<!--                    <div class="img_middle">-->
+<!--                        <a class="img_middle_in" href="{$wa->shop->productUrl($item.product)}" title="{$item.product.name|escape}">-->
+<!--                            {$wa->shop->productImgHtml($item.product, '96', ['default' => "`$wa_theme_url`img/dummy96.png"])}-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </td>-->
+<!--                <td class="item-center">-->
+<!--                    <a href="{$wa->shop->productUrl($item.product)}">{$item.product.name|escape}</a>-->
+<!--                    {if $item.sku_name && $item.sku_name != $item.product.name}{$item.sku_name|escape}{/if}-->
+
+<!--                    {if !empty($item.services)}-->
+<!--                    &lt;!&ndash; services &ndash;&gt;-->
+<!--                    <div class="services">-->
+<!--                        {foreach $item.services as $service_id => $s}-->
+<!--                        &lt;!&ndash; one option &ndash;&gt;-->
+<!--                        <div {if !empty($s.id)}data-id="{$s.id}"{/if}>-->
+<!--                        <label>-->
+<!--                            <input {if !empty($s.id)}checked{/if} type="checkbox" name="services[{$item.id}][]" value="{$service_id}"> {$s.name|escape} {if $s.price && !isset($s.variants)}(<span>+{shop_currency_html($s.price, $s.currency)}</span>){/if}-->
+<!--                        </label>-->
+<!--                        {if isset($s.variants)}-->
+<!--                        <select class="form-control input-sm" name="service_variant[{$item.id}][{$service_id}]" {if empty($s.id)}disabled{/if}>-->
+<!--                        {foreach $s.variants as $variant_id => $v}-->
+<!--                        <option {if $s.variant_id == $variant_id}selected{/if} value="{$variant_id}">{$v.name|escape} (+{shop_currency($v.price, $s.currency)})</option>-->
+<!--                        {/foreach}-->
+<!--                        </select>-->
+<!--                        {/if}-->
+<!--                    </div>-->
+<!--                    {/foreach}-->
+<!--    </div>-->
+<!--    {/if}-->
+<!--    </td>-->
+
+<!--    <td class="item-price">-->
+<!--        <span class="nowrap">{shop_currency_html($item.price, true)}</span>-->
+
+<!--        {if $item.compare_price != 0}-->
+<!--        <br>-->
+<!--        <span class="compare-at-price nowrap">{shop_currency_html($item.compare_price, true)}</span>-->
+<!--        {/if}-->
+<!--    </td>-->
+
+<!--    {$p = $wa->shop->product($item.product.id)}-->
+<!--    {$kratno = $p['features']['only_contain_order']}-->
+<!--    {$except = $p['features']['except_contain_shop']}-->
+<!--    {$unit = $p['features']['unit']}-->
+<!--    {if $kratno && $except != '1'}-->
+<!--    {$contain = $p['features']['contain']}-->
+<!--    {else}-->
+<!--    {$contain = 1}-->
+<!--    {/if}-->
+<!--    {if ceil($contain) == $contain}-->
+<!--    {$contain = ceil($contain)}-->
+<!--    {/if}-->
+<!--    {if ceil($item.quantity) == $item.quantity}-->
+<!--    {$item.quantity = ceil($item.quantity)}-->
+<!--    {/if}-->
+<!--    <td class="item-qty">-->
+<!--        <div class="qty_wrap">-->
+<!--            <div class="input-group">-->
+<!--                <div class="input-group-btn">-->
+<!--                    <button class="minus btn btn-default" type="button">-</button>-->
+<!--                </div>-->
+<!--                <input {if $contain != 1}readonly{/if} data-step="{$contain}" type="text" name="quantity[{$item.id}]" value="{$item.quantity}" class="qty form-control{if !empty($item.error)} error{/if}">-->
+<!--                <div class="input-group-btn">-->
+<!--                    <button class="plus btn btn-default" type="button">+</button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </td>-->
+<!--    <td class="item-edizm hidden-xs hidden-sm">-->
+<!--        {if $unit}{$unit}{/if}-->
+<!--    </td>-->
+<!--    <td class="item-total hidden-xs hidden-sm">-->
+<!--        <span class="nowrap">{shop_currency_html($item.full_price, true)}</span>-->
+<!--    </td>-->
+
+<!--    <td class="item-remove">-->
+<!--        <a class="delete" href="#" title="[`Remove from cart`]"><i class="fa fa-times-circle"></i>[`Remove`]</a>-->
+<!--        </div>-->
+
+<!--        {*-->
+<!--        {if $theme_settings.cart_crossselling == 'many'}-->
+<!--        {if $item@index < 3}-->
+<!--        {$_exclude_ids = []}-->
+<!--        {foreach $cart.items as $item}{$_exclude_ids[] = $item.product.id}{/foreach}-->
+<!--        {$related = $wa->shop->crossSelling($item.product.id, 5, true, $_exclude_ids)}-->
+<!--        {if $related}-->
+<!--        <div class="clear-both" data-id="{$item.id}">-->
+<!--            <div class="col w1 item-thumb">&nbsp;</div>-->
+<!--            <div class="col w15 small related">-->
+<!--                <h4><strong>[`Recommended!`]</strong> {sprintf('[`Customers who bought %s also bought`]', $item.product.name|escape)}:</h4>-->
+<!--                {include file="list-thumbs-mini.html" products=$related without_form=true }-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        {/if}-->
+<!--        {/if}-->
+<!--        {/if}-->
+<!--        *}-->
+<!--        </tr>-->
+
+<!--        {if !empty($item.error)}<script>alert({json_encode($item.error)});</script>{/if}-->
+<!--        {/foreach}-->
+<!--        </tbody>-->
+<!--        </table>-->
+
+<!--        {literal}-->
+<!--        <script type="text/javascript">-->
+<!--            inCart = [{/literal}{$cart_items=$wa->shop->cart->items()}{foreach $cart_items as $item}{$item.id}, {/foreach}{literal}];-->
+<!--        </script>-->
+<!--        {/literal}-->
+
+<!--        <div class="row cart_bottom">-->
+<!--            <div class="col-xs-12 col-sm-9">-->
+<!--                {if shopDiscounts::isEnabled('coupons')}-->
+<!--                <div id="apply-coupon-code" class="form-inline">-->
+<!--                    [`Coupon code`]:-->
+<!--                    <div class="coupon_wrapper">-->
+<!--                        <input type="text" class="form-control" name="coupon_code" value="{$coupon_code|escape}">-->
+<!--                        <button type="submit" class="btn btn-secondary btn-sm">-->
+<!--                            <span class="hidden-xs">[`Apply`]</span>-->
+<!--                            <i class="fa fa-check visible-xs-block"></i>-->
+<!--                        </button>-->
+<!--                </div>-->
+<!--                    {if $discount}-->
+<!--                    <span class="coupon_discount">&minus;{shop_currency_html($discount, true)}</span>-->
+<!--                    {/if}-->
+<!--                </div>-->
+
+<!--                {if shopAffiliate::isEnabled() && $affiliate_bonus > 0}-->
+<!--                <hr>-->
+<!--                &lt;!&ndash; affiliate bonus &ndash;&gt;-->
+<!--                <div class="affiliate_bonus">-->
+<!--                    <div class="">-->
+<!--                        {if $use_affiliate}-->
+<!--                        {sprintf("[`You used affiliate bonus of %s points. You get additional discount of %s`]", "<strong>{$affiliate_bonus}</strong>", "<strong class='nowrap'>{shop_currency_html(shopAffiliate::convertBonus($affiliate_bonus))}</strong>")}-->
+<!--                        <button class="btn btn-default btn-sm" id="cancel-affiliate">[`Don’t use bonus discount`]</button>-->
+<!--                        {else}-->
+<!--                        {sprintf("[`Your current affiliate bonus of %s points allows you to get an additonal discount of up to %s`]", "<strong>{$affiliate_bonus}</strong>", "<strong class='nowrap'>{shop_currency_html(shopAffiliate::convertBonus($affiliate_bonus))}</strong>")}-->
+<!--                        <br>-->
+<!--                        <input type="submit" name="use_affiliate" class="btn btn-secondary" value="[`Use bonus`]">-->
+<!--                        {/if}-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                {/if}-->
+
+<!--                {if shopAffiliate::isEnabled() && !empty($add_affiliate_bonus)}-->
+<!--                <hr>-->
+<!--                <div class="no-border">-->
+<!--                    <p class="affiliate"><i class="fa fa-thumbs-o-up like"></i> {sprintf("[`This order will add <strong>+%s bonuses</strong> to  your account, which you will be able to spend on getting additional discounts later.`]", $add_affiliate_bonus)}</p>-->
+<!--                </div>-->
+<!--                {/if}-->
+<!--                {/if}-->
+<!--            </div>-->
+
+<!--            <div class="col-xs-12 col-sm-3">-->
+<!--                <table class="cart_total_checkout pull-right">-->
+<!--                    {if $use_affiliate || $discount}-->
+<!--                    {if $discount}-->
+<!--                    <tr>-->
+<!--                        <th>[`Discount`]:</th>-->
+<!--                        <td class="cart-discount nowrap">&minus;{shop_currency_html($discount, true)}</td>-->
+<!--                    </tr>-->
+<!--                    {/if}-->
+<!--                    {if $use_affiliate}-->
+<!--                    <tr>-->
+<!--                        <th>Партнерский бонус:</th>-->
+<!--                        <td class="cart-affiliate-discount nowrap">&minus;{shop_currency_html(shopAffiliate::convertBonus($used_affiliate_bonus), true)}</td>-->
+<!--                    </tr>-->
+<!--                    {/if}-->
+<!--                    {/if}-->
+
+<!--                    <tr>-->
+<!--                        <th>[`Total`]:</th>-->
+<!--                        <td class="cart-total total nowrap">{shop_currency_html($cart.total, true)}</td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td class="cart-checkout" colspan="2">-->
+<!--                            <input onclick="yaCounter41730784.reachGoal('checkout'); return true;" name="checkout" class="btn btn-primary btn-xmd" type="submit" value="[`Proceed to checkout`]">-->
+
+<!--                            {*-->
+<!--                            *	Купить в один клик (easy IT)-->
+<!--                            *	https://www.webasyst.ru/store/plugin/shop/storequickorder/-->
+<!--                            *}-->
+<!--                            {if isset($frontend_cart['storequickorder-plugin'])}-->
+<!--                            <br>-->
+<!--                            {$frontend_cart['storequickorder-plugin']}-->
+<!--                            {/if}-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; plugin hook: 'frontend_cart' &ndash;&gt;-->
+<!--        {* @event frontend_cart.%plugin_id% *}-->
+<!--        {foreach $frontend_cart as $_key => $_}-->
+<!--        {if $_key != 'storequickorder-plugin'}-->
+<!--        {$_}-->
+<!--        {/if}-->
+<!--        {/foreach}-->
+
+<!--        {$related = $wa->shop->crossSelling($cart.items, 'product_id')}-->
+<!--        {if $related}-->
+<!--        <br>-->
+<!--        <div class="content_slider products_slider">-->
+<!--            <h4 class="title">[`Recommended!`]</h4>-->
+<!--            {include file="products-list.html" products=$related catalog_view="slider"}-->
+<!--        </div>-->
+<!--        {/if}-->
+<!--        </div>-->
+</form>
+<script>
+    function checkAll(obj) {
+
+
+        var items = obj.form.getElementsByTagName("input"),
+            len, i;
+
+        for (i = 0, len = items.length; i < len; i += 1) {
+
+            if (items.item(i).type && items.item(i).type === "checkbox") {
+
+                if (obj.checked) {
+
+                    items.item(i).checked = true;
+                } else {
+
+                    items.item(i).checked = false;
+                }
+            }
+        }
+    }
+</script>
