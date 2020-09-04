@@ -1,4 +1,74 @@
 $(function() {
+    $(document).ready(function() {
+        //set initial state.
+        //$('#textbox1').val(this.checked);
+
+        $('.item-select__input').change(function() {
+            if(this.checked) {
+                //var returnVal = confirm("Are you sure?");
+                //$(this).prop("checked", returnVal);
+                console.log(this);
+            }
+            else {
+
+                var items = document.getElementById('items').querySelectorAll(".item input[type='checkbox']");
+                console.log(items);
+
+                items.forEach(
+                    function (item) {
+                        var row = item.closest('.item');
+
+                        //var row = $(this).closest('.item');
+                        console.log($(row).data('id'));
+
+                        $.post('/postponedbasket/cartreserv/', {
+                            html: 1,
+                            id: $(row).data('id')
+                        }, function(response) {
+                            if (response.data.count === 0) {
+                                location.reload();
+                            }
+                            //row.remove();
+                            updateCart(response.data);
+                        }, "json");
+                        return false;
+                    }
+                    //item => item.closest('.item').remove()
+                );
+
+
+
+                // document.cookie = 'id=44444';
+                // document.cookie = 'name=товар';
+                // document.cookie = 'quantity=2';
+                //var arr1 = new Map();
+
+// создание ассоциативного массива и добавление в него 3 пары "ключ-значение"
+//                 var arr = new Map([
+//                     ['id', 44444],
+//                     ['name', 'имя'],
+//                     ['quantity', 2]
+//                 ],
+//                     [
+//                         ['id', 5555],
+//                         ['name', 'имя2'],
+//                         ['quantity', 4]
+//                     ],
+//                 );
+//                 var myAry = {
+//                     'id':44444,
+//                     'name':'имя',
+//                     'quantity':2
+//                 };
+//                 $.cookie('name', JSON.stringify([...arr]));
+//                 console.log(JSON.parse($.cookie('name')));
+
+
+            }
+            //$('#textbox1').val(this.checked);
+        });
+    });
+
     $(".select-panel__btn-del").click(function() {
 
            // console.log(document.getElementById(appendBox).querySelectorAll(".item input[type='checkbox']:checked"));
@@ -42,6 +112,7 @@ $(function() {
 
 
     });
+
     function updateCart(data) {
         console.log(data);
         $(".cart-total").html(data.total);
