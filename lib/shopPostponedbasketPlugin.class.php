@@ -25,7 +25,7 @@ public function test(){
     public function frontendProduct()
     {
         $cart_button= array(
-            'cart'      => '<button>В корзину</button>',
+            'cart'      => '<button type="submit">В корзину</button>',
         );
         return $cart_button;
     }

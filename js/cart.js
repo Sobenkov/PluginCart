@@ -1,11 +1,6 @@
 $(function() {
     $(document).ready(function() {
 
-
-
-
-
-
         //set initial state.
         //$('#textbox1').val(this.checked);
 
@@ -20,7 +15,7 @@ $(function() {
                 console.log(serProd);
 
 
-                    $.post('/cart/add/?html=1', serProd, function(response) {
+                    $.post('/postponedbasket/cartreservadd/?html=1', serProd, function(response) {
                         if (response.status == 'ok') {
                             location.reload();
                             console.log(response);
@@ -291,7 +286,7 @@ $(function() {
     // });
     $(".cart a.delete").click(function() {
         var row = $(this).closest('.item');
-        $.post('delete/sfddasf', {
+        $.post('delete/', {
             html: 1,
             id: row.data('id')
         }, function(response) {
