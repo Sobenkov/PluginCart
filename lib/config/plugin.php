@@ -3,8 +3,10 @@ return array(
     'name'     => 'PostponedbasketPlugin',
     'frontend' => true,
     'handlers' => array(
-        'order_action.create'   => 'orderActionCreate',
-        'order_action.*'        => 'actionHandler',
+
+        'frontend_product'     => 'frontendProduct',
+        'frontend_category'     => 'frontendCategory',
+
     ),
     'version'  => '1.0.0',
 );

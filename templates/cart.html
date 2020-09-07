@@ -18,7 +18,7 @@
     <div class="w-line-02 cart">
         <div class="w-column-01" id="items">
             {foreach $cart.items as $item}
-            <div class="item" data-id="{$item.id}">
+            <div class="item" data-id="{$item.id}" data-product="{$item.product_id}" data-sku="{$item.sku_id}" >
 
                 <div class="item-select">
                     <input checked class="item-select__input" type="checkbox">
