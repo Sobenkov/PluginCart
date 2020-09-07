@@ -37,6 +37,11 @@ public function test(){
         return 'custom HTML';
     }
 
+    public function frontendHead()
+    {
+        $this->addJs('js/cart.js');
+    }
+
 
 
 }
